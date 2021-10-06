@@ -5,17 +5,26 @@ import {titleType} from "./App";
 type propsButtonType = {
     inc?: () => void
     reset?: () => void
+    set?: () => void
     disableInc?: boolean
     disableReset?: boolean
     title: titleType
+    onClick?: () => void
 }
 
 export const Button = (props: propsButtonType) => {
     const inc = (title: titleType) => {
         if (title === 'INC') {
             return props.inc
-        } else if (title === 'RESET') {
+        }
+        if (title === 'RESET') {
             return props.reset
+        }
+        if (title === 'SET') {
+            if (props.onClick) {
+                props.onClick()
+            }
+            return props.set
         }
     }
     const disable = () => {
@@ -28,9 +37,10 @@ export const Button = (props: propsButtonType) => {
 
     return (
         <span className={styles.main}>
-            <button className={styles.button1}
-                    onClick={inc(props.title)}
-                    disabled={disable()}>
+            <button
+                className={styles.button1}
+                onClick={inc(props.title)}
+                disabled={disable()}>
                 {props.title}
             </button>
 

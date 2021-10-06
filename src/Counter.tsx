@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './Counter.module.css'
 
 type propsType = {
@@ -7,9 +7,8 @@ type propsType = {
 }
 
 export const Counter = (props: propsType) => {
-
     return (
-        <div className={styles.input + ' ' + styles.main}>
+        <div className={styles.i + ' ' + styles.main}>
             <input className={props.disable ? styles.red : ''} type="number" value={props.counter}/>
         </div>
     )

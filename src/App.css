@@ -3,7 +3,12 @@
   border: 1px solid blue;
   padding: 20px;
   width: 150px;
+  height: 90px;
   margin: 20px auto 0;
   border-radius: 15px;
   background-color: #f5db73;
+}
+.error {
+  color: red;
+  height: 90px;
 }

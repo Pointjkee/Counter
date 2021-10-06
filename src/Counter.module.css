@@ -1,9 +1,9 @@
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+.i input::-webkit-outer-spin-button,
+.i input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
     }
-input {
+.i input {
     width: 30px;
     height: 30px;
     border-radius: 8px;
