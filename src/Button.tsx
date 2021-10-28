@@ -8,6 +8,7 @@ type propsButtonType = {
     set?: () => void
     disableInc?: boolean
     disableReset?: boolean
+    disableSet?: boolean
     title: titleType
     onClick?: () => void
 }
@@ -30,7 +31,11 @@ export const Button = (props: propsButtonType) => {
     const disable = () => {
         if (props.disableInc) {
             return true
-        } else if (props.disableReset) {
+        }
+        if (props.disableReset) {
+            return true
+        }
+        if (props.disableSet) {
             return true
         }
     }
@@ -48,15 +53,3 @@ export const Button = (props: propsButtonType) => {
     )
 }
 
-/*
-export const Button = (props: propsButtonType) => {
-
-    return (
-        <span className={styles.main}>
-            <button className={styles.button1} onClick={props.inc} disabled={props.disableInc}> INC</button>
-            <button className={styles.button2} onClick={props.reset} disabled={props.disableReset}> RESET</button>
-        </span>
-
-    )
-
-}*/
