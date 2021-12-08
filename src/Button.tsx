@@ -8,7 +8,7 @@ type propsButtonType = {
     set?: () => void
     disableInc?: boolean
     disableReset?: boolean
-    disableSet?: boolean
+    disableAccept?:boolean
     title: titleType
     onClick?: () => void
 }
@@ -29,15 +29,7 @@ export const Button = (props: propsButtonType) => {
         }
     }
     const disable = () => {
-        if (props.disableInc) {
-            return true
-        }
-        if (props.disableReset) {
-            return true
-        }
-        if (props.disableSet) {
-            return true
-        }
+     return    !!(props.disableInc || props.disableReset || props.disableAccept)
     }
 
     return (

@@ -5,105 +5,88 @@ import {Counter} from './Counter';
 import {Input} from './Input';
 import {restoreState, saveState} from "./localStorage";
 import {useDispatch, useSelector} from "react-redux";
-import {buttonIncAC, setMinAC} from "./reducers/counterReducer";
-import {AppStoreType} from './store/store';
-import {minAC} from "./reducers/minReducer";
-import {maxAC} from "./reducers/maxReducer";
-import {setValuesAC} from './reducers/setValuesReducer';
-import {setButtonMaxAC} from "./reducers/setButtonMaxReducer";
-import {setButtonMinAC} from "./reducers/setButtonMinReducer";
+import {AppStoreType} from "./store/store";
+import {incAC, resetAC, setMax, setMin} from './reducers/counterReducer';
+import {newValueMaxAC, newValueMinAC} from './reducers/setButtonReducer';
+import {acceptAC, disableIncAC, disableResetAC} from "./reducers/disableAcceptReducer";
 
+//60108
 export type titleType = 'INC' | 'RESET' | 'SET'
 
-const App = () => {
-    // const [min, setMin] = useState<number>(0)
-    // const [max, setMax] = useState<number>(5)
-    // const [counter, setCounter] = useState<number>(restoreState('min', min))
-    // const [setButtonMin, setSetButtonMin] = useState<number>(min)
-    // const [setButtonMax, setSetButtonMax] = useState<number>(max)
-    // const [setValues, setSetValues] = useState(false)
-
-    const counter = useSelector<AppStoreType, number>(state => state.counter)
-    const min = useSelector<AppStoreType, number>(state => state.min)
-    const max = useSelector<AppStoreType, number>(state => state.max)
-    const setValues = useSelector<AppStoreType, boolean>(state => state.setValues)
-    const setButtonMax = useSelector<AppStoreType, number>(state => state.setButtonMax)
-    const setButtonMin = useSelector<AppStoreType, number>(state => state.setButtonMin)
+function App() {
+    const counter = useSelector<AppStoreType, number>(state => state.counter.counter)
+    const min = useSelector<AppStoreType, number>(state => state.counter.min)
+    const max = useSelector<AppStoreType, number>(state => state.counter.max)
+    const setButtonMin = useSelector<AppStoreType, number>(state => state.setButton.valueMin)
+    const setButtonMax = useSelector<AppStoreType, number>(state => state.setButton.valueMax)
+    const disableInc = useSelector<AppStoreType, boolean>(state => state.disableAccept.disableInc)
+    const disableReset = useSelector<AppStoreType, boolean>(state => state.disableAccept.disableReset)
+    const accept = useSelector<AppStoreType, boolean>(state => state.disableAccept.accept)
     const dispatch = useDispatch()
 
-    const saveMax = (max: number) => {
+    const saveMax =  useCallback((max: number) => {
         saveState<number>('max', max)
-    }
-    const saveMin = (min: number) => {
+    },[max])
+    const saveMin = useCallback((min: number) => {
         saveState<number>('min', min)
-    }
+    },[min])
     useEffect(() => {
-        dispatch(maxAC(restoreState('max', max)))
-        dispatch(setMinAC(restoreState('min', min)))
-        dispatch(minAC(restoreState('min', min)))
+        dispatch(setMax(restoreState('max', max)))
+        dispatch(setMin(restoreState('min', min)))
+        dispatch(resetAC(restoreState('min', min)))
     }, [])
     const buttonInc = useCallback(() => {
-        dispatch(buttonIncAC(counter))
-    }, [dispatch, counter])
-
+        dispatch(incAC(counter))
+    }, [counter])
     const buttonRes = useCallback(() => {
-        dispatch(setMinAC(restoreState('min', min)))
-    }, [dispatch, min])
-
+        dispatch(resetAC(setButtonMin))
+    }, [setButtonMin])
     const newValueMax = useCallback((value: number) => {
-        dispatch(setButtonMaxAC(value))
-        setButtonMax !== max ? dispatch(setValuesAC(true)) : dispatch(setValuesAC(false))
-    }, [dispatch])
+        dispatch(newValueMaxAC(value))
+        counter >= max ? dispatch(disableIncAC(true)) : dispatch(disableIncAC(false))
+        value !== max ? dispatch(acceptAC(true)) : dispatch(acceptAC(false))
+    }, [counter, max])
+
     const newValueMin = useCallback((value: number) => {
-        dispatch(setButtonMinAC(value))
-        if (setButtonMin !== min) {
-            dispatch(setValuesAC(true))
-        }
-    }, [dispatch])
-    const buttonSet = useCallback(() => {
-        dispatch(maxAC(setButtonMax))
-        dispatch(minAC(setButtonMin))
-        dispatch(setMinAC(setButtonMin))
+        dispatch(newValueMinAC(value))
+        counter === min ? dispatch(disableResetAC(true)) : dispatch(disableResetAC(false))
+        value !== min ? dispatch(acceptAC(true)) : dispatch(acceptAC(false))
+    }, [counter, min])
+
+    const buttonSet = () => {
+        dispatch(setMax(setButtonMax))
+        dispatch(setMin(setButtonMin))
+        dispatch(resetAC(setButtonMin))
         saveMax(setButtonMax)
         saveMin(setButtonMin)
-    }, [dispatch, setButtonMax, setButtonMin])
-
-
-    let disableInc
-    counter >= max ? disableInc = true : disableInc = false
-    let disableReset
-    counter === min ? disableReset = true : disableReset = false
-
-    let error
+    }
+    let error = false
     if (setButtonMin >= setButtonMax) {
         error = true
     }
     if (setButtonMin < 0 || counter < 0) {
         error = true
     }
-
     return (
         <div>
-            <div className='App'>
+            <div className="App">
                 {error
                 &&
                 <div className={'error'}> Incorrect value!</div>
                 ||
                 <div>
-                    {setValues && <div className={'setValues'}>Press 'SET'</div>
-                    ||
+                    {accept && <div className={'error'}> Press SET</div> ||
                     <div>
                         <Counter counter={counter} disable={disableInc}/>
+                        <Button title={'INC'} inc={buttonInc} disableInc={disableInc}/>
+                        <Button title={'RESET'} reset={buttonRes} disableReset={disableReset}/>
                     </div>}
-                    <Button title={'INC'} inc={buttonInc} disableInc={disableInc}/>
-                    <Button title={'RESET'} reset={buttonRes} disableReset={disableReset}/>
                 </div>}
             </div>
-
             <div className="App">
                 <Input title={'Max value'} newValue={newValueMax} value={restoreState('max', max)}/>
                 <Input title={'Min value'} newValue={newValueMin} value={restoreState('min', min)}/>
-                <Button title={'SET'} set={buttonSet} disableSet={error}/>
+                <Button title={'SET'} set={buttonSet} disableAccept={error}  />
             </div>
         </div>
     )

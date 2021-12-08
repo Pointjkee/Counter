@@ -1,18 +1,13 @@
 import {counterReducer} from "../reducers/counterReducer";
-import {minReducer} from "../reducers/minReducer";
 import {combineReducers, createStore} from "redux";
-import {maxReducer} from "../reducers/maxReducer";
-import {setValuesReducer} from "../reducers/setValuesReducer";
-import {setButtonMaxReducer} from "../reducers/setButtonMaxReducer";
-import {setButtonMinReducer} from "../reducers/setButtonMinReducer";
+import {setButtonReducer} from "../reducers/setButtonReducer";
+import { disableAcceptReducer } from "../reducers/disableAcceptReducer";
+
 
 const reducers = combineReducers({
-    counter: counterReducer,
-    min: minReducer,
-    max: maxReducer,
-    setValues: setValuesReducer,
-    setButtonMax: setButtonMaxReducer,
-    setButtonMin: setButtonMinReducer,
+ counter: counterReducer,
+ setButton: setButtonReducer,
+ disableAccept:disableAcceptReducer,
 })
 const store = createStore(reducers)
 

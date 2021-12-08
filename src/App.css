@@ -6,14 +6,9 @@
   height: 90px;
   margin: 20px auto 0;
   border-radius: 15px;
-  background-color: #f5db73;
+  background-color: #8ad3fc;
 }
 .error {
   color: red;
   height: 90px;
-}
-.setValues {
-  color: green;
-  margin-bottom: 30px;
-  padding-top: 20px;
 }

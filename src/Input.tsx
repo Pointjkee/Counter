@@ -6,7 +6,7 @@ type InputPropsType = {
     value: number
 }
 
-export const Input = (props: InputPropsType) => {
+export const Input = React.memo ((props: InputPropsType) => {
     const [value, setValue] = useState<number>(props.value)
     const changeValue = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(+e.currentTarget.value)
@@ -25,4 +25,4 @@ export const Input = (props: InputPropsType) => {
             />
         </div>
     )
-}
+})
